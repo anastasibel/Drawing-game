@@ -1,6 +1,7 @@
 package com.example.drawinggame
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Canvas
@@ -59,6 +60,13 @@ fun DrawCanvas(pathData: MutableState<PathData>) {
                 detectDragGestures(
                     onDragStart = {
                         tempPath = Path()
+                    },
+                    onDragEnd = {
+                        pathList.add(
+                            pathData.value.copy(
+                                path = tempPath
+                            )
+                        )
                     }
                 ) { change, dragAmount ->
                     tempPath.moveTo(
@@ -69,6 +77,9 @@ fun DrawCanvas(pathData: MutableState<PathData>) {
                         change.position.x,
                         change.position.y
                     )
+                    if (pathList.size > 0){
+                        pathList.removeAt(pathList.size - 1)
+                    }
                     pathList.add(
                         pathData.value.copy(
                             path = tempPath
@@ -84,5 +95,6 @@ fun DrawCanvas(pathData: MutableState<PathData>) {
                 style = Stroke(5f)
             )
         }
+        Log.d("My Log", "Size: ${pathList.size}")
     }
 }
