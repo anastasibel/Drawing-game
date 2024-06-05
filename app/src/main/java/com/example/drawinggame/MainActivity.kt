@@ -34,6 +34,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DrawCanvas() {
 
+    val tempPath = Path()
+
     val path = remember {
         mutableStateOf(Path())
     }
@@ -43,14 +45,17 @@ fun DrawCanvas() {
             .fillMaxSize()
             .pointerInput(true) {
                 detectDragGestures { change, dragAmount ->
-                    path.value.moveTo(
+                    tempPath.moveTo(
                         change.position.x - dragAmount.x,
                         change.position.y - dragAmount.y
                     )
-                    path.value.lineTo(
+                    tempPath.lineTo(
                         change.position.x,
                         change.position.y
                     )
+                    path.value = Path().apply {
+                        addPath(tempPath)
+                    }
                 }
             }
     ) {
