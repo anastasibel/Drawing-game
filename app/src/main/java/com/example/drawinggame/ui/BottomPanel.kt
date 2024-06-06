@@ -27,7 +27,7 @@ import com.example.drawinggame.ui.theme.MyOrange
 import com.example.drawinggame.ui.theme.MyYellow
 
 @Composable
-fun BottomPanel(onClick: (Color) -> Unit, onLineWigthChange: (Float) -> Unit) {
+fun BottomPanel(onClick: (Color) -> Unit, onLineWidthChange: (Float) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -39,7 +39,7 @@ fun BottomPanel(onClick: (Color) -> Unit, onLineWigthChange: (Float) -> Unit) {
             onClick(color)
         }
         CustomSlider { lineWigth ->
-            onLineWigthChange(lineWigth)
+            onLineWidthChange(lineWigth)
         }
     }
 }
@@ -86,7 +86,7 @@ fun CustomSlider(onChange: (Float) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Text("Line wight: ${(position * 100).toInt()}")
+        Text("Line width: ${(position * 100).toInt()}")
         Slider(
             value = position,
             onValueChange = {

@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import com.example.drawinggame.ui.BottomPanel
@@ -38,9 +39,9 @@ class MainActivity : ComponentActivity() {
                                 color = color
                             )
                         }
-                    ){lineWigth ->
+                    ){ lineWidth ->
                         pathData.value = pathData.value.copy(
-                            lineWight = lineWigth
+                            lineWidht = lineWidth
                         )
                     }
                 }
@@ -98,7 +99,10 @@ fun DrawCanvas(pathData: MutableState<PathData>) {
             drawPath(
                 path = pathData.path,
                 color = pathData.color,
-                style = Stroke(pathData.lineWight)
+                style = Stroke(
+                    pathData.lineWidht,
+                    cap = StrokeCap.Round,
+                )
             )
         }
         Log.d("My Log", "Size: ${pathList.size}")
