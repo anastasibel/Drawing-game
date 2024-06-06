@@ -2,15 +2,23 @@ package com.example.drawinggame.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
@@ -28,13 +37,17 @@ import com.example.drawinggame.R
 import com.example.drawinggame.ui.theme.MyGreen
 import com.example.drawinggame.ui.theme.MyLightBlue
 import com.example.drawinggame.ui.theme.MyOrange
+import com.example.drawinggame.ui.theme.MyPink
+import com.example.drawinggame.ui.theme.MyPurple
 import com.example.drawinggame.ui.theme.MyYellow
 
 @Composable
 fun BottomPanel(
     onClickColor: (Color) -> Unit,
     onLineWidthChange: (Float) -> Unit,
-    onClickPattern: (StrokeCap) -> Unit
+    onClickPattern: (StrokeCap) -> Unit,
+    onBackClick: () -> Unit,
+    onClearClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -52,6 +65,11 @@ fun BottomPanel(
         StyleList { pattern ->
             onClickPattern(pattern)
         }
+        ButtonPanel(
+            onClickBack = { onBackClick() },
+            onClickClear = { onClearClick() }
+        )
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }
 
@@ -66,6 +84,9 @@ fun ColorList(onClick: (Color) -> Unit) {
         MyYellow,
         MyGreen,
         MyLightBlue,
+        Color.Blue,
+        MyPurple,
+        MyPink,
     )
 
     LazyRow(
@@ -79,7 +100,7 @@ fun ColorList(onClick: (Color) -> Unit) {
                     .clickable {
                         onClick(color)
                     }
-                    .size(30.dp)
+                    .size(32.dp)
                     .background(color, CircleShape)
             )
         }
@@ -136,6 +157,39 @@ fun StyleList(onClick: (StrokeCap) -> Unit) {
                     contentDescription = null
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun ButtonPanel(onClickBack: () -> Unit, onClickClear: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        IconButton(
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(Color.White),
+            onClick = { onClickBack() }
+        )
+        {
+            Icon(
+                Icons.Default.ArrowBack,
+                contentDescription = null
+            )
+        }
+        IconButton(
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(Color.White),
+            onClick = { onClickClear() }
+        )
+        {
+            Icon(
+                Icons.Default.Refresh,
+                contentDescription = null
+            )
         }
     }
 }

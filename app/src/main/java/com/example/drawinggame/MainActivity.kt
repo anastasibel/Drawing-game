@@ -14,6 +14,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -26,12 +27,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
             val pathData = remember {
                 mutableStateOf(PathData())
             }
+
+            val pathList = remember {
+                mutableStateListOf(PathData())
+            }
+
             DrawingGameTheme {
                 Column {
-                    DrawCanvas(pathData)
+                    DrawCanvas(pathData, pathList)
                     BottomPanel(
                         { color ->
                             pathData.value = pathData.value.copy(
@@ -47,6 +54,14 @@ class MainActivity : ComponentActivity() {
                             pathData.value = pathData.value.copy(
                                 pattern = pattern
                             )
+                        },
+                        {
+                            pathList.removeIf { pathData ->
+                                pathList[pathList.size - 1] == pathData
+                            }
+                        },
+                        {
+                            pathList.clear()
                         }
                     )
                 }
@@ -56,13 +71,9 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun DrawCanvas(pathData: MutableState<PathData>) {
+fun DrawCanvas(pathData: MutableState<PathData>, pathList: SnapshotStateList<PathData>) {
 
     var tempPath = Path()
-
-    val pathList = remember {
-        mutableStateListOf(PathData())
-    }
 
     Canvas(
         modifier = Modifier
