@@ -32,9 +32,15 @@ class MainActivity : ComponentActivity() {
             DrawingGameTheme {
                 Column {
                     DrawCanvas(pathData)
-                    BottomPanel { color ->
+                    BottomPanel(
+                        { color ->
+                            pathData.value = pathData.value.copy(
+                                color = color
+                            )
+                        }
+                    ){lineWigth ->
                         pathData.value = pathData.value.copy(
-                            color = color
+                            lineWight = lineWigth
                         )
                     }
                 }
@@ -55,7 +61,7 @@ fun DrawCanvas(pathData: MutableState<PathData>) {
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.85f)
+            .fillMaxHeight(0.75f)
             .pointerInput(true) {
                 detectDragGestures(
                     onDragStart = {
@@ -77,7 +83,7 @@ fun DrawCanvas(pathData: MutableState<PathData>) {
                         change.position.x,
                         change.position.y
                     )
-                    if (pathList.size > 0){
+                    if (pathList.size > 0) {
                         pathList.removeAt(pathList.size - 1)
                     }
                     pathList.add(
@@ -92,7 +98,7 @@ fun DrawCanvas(pathData: MutableState<PathData>) {
             drawPath(
                 path = pathData.path,
                 color = pathData.color,
-                style = Stroke(5f)
+                style = Stroke(pathData.lineWight)
             )
         }
         Log.d("My Log", "Size: ${pathList.size}")

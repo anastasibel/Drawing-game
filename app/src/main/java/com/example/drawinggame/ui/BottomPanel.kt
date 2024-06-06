@@ -10,7 +10,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,19 +24,22 @@ import androidx.compose.ui.unit.dp
 import com.example.drawinggame.ui.theme.MyGreen
 import com.example.drawinggame.ui.theme.MyLightBlue
 import com.example.drawinggame.ui.theme.MyOrange
-import com.example.drawinggame.ui.theme.MyPurple
 import com.example.drawinggame.ui.theme.MyYellow
 
 @Composable
-fun BottomPanel(onClick: (Color) -> Unit) {
+fun BottomPanel(onClick: (Color) -> Unit, onLineWigthChange: (Float) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.LightGray),
+            .background(Color.LightGray)
+            .padding(top = 10.dp, bottom = 10.dp, start = 40.dp, end = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ColorList() { color ->
+        ColorList { color ->
             onClick(color)
+        }
+        CustomSlider { lineWigth ->
+            onLineWigthChange(lineWigth)
         }
     }
 }
@@ -46,9 +55,7 @@ fun ColorList(onClick: (Color) -> Unit) {
         MyYellow,
         MyGreen,
         MyLightBlue,
-        Color.Blue,
-        MyPurple,
-        )
+    )
 
     LazyRow(
         modifier = Modifier.padding(5.dp)
@@ -65,5 +72,28 @@ fun ColorList(onClick: (Color) -> Unit) {
                     .background(color, CircleShape)
             )
         }
+    }
+}
+
+@Composable
+fun CustomSlider(onChange: (Float) -> Unit) {
+
+    var position by remember {
+        mutableStateOf(0.05f)
+    }
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+        Text("Line wight: ${(position * 100).toInt()}")
+        Slider(
+            value = position,
+            onValueChange = {
+                val tempPos = if (it > 0) it else 0.01f
+                position = tempPos
+                onChange(tempPos * 100)
+            }
+        )
     }
 }
