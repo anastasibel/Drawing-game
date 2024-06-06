@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,14 +21,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.drawinggame.R
 import com.example.drawinggame.ui.theme.MyGreen
 import com.example.drawinggame.ui.theme.MyLightBlue
 import com.example.drawinggame.ui.theme.MyOrange
 import com.example.drawinggame.ui.theme.MyYellow
 
 @Composable
-fun BottomPanel(onClick: (Color) -> Unit, onLineWidthChange: (Float) -> Unit) {
+fun BottomPanel(
+    onClickColor: (Color) -> Unit,
+    onLineWidthChange: (Float) -> Unit,
+    onClickPattern: (StrokeCap) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -36,10 +44,13 @@ fun BottomPanel(onClick: (Color) -> Unit, onLineWidthChange: (Float) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ColorList { color ->
-            onClick(color)
+            onClickColor(color)
         }
-        CustomSlider { lineWigth ->
-            onLineWidthChange(lineWigth)
+        CustomSlider { lineWidth ->
+            onLineWidthChange(lineWidth)
+        }
+        StyleList { pattern ->
+            onClickPattern(pattern)
         }
     }
 }
@@ -95,5 +106,36 @@ fun CustomSlider(onChange: (Float) -> Unit) {
                 onChange(tempPos * 100)
             }
         )
+    }
+}
+
+@Composable
+fun StyleList(onClick: (StrokeCap) -> Unit) {
+
+    val patterns = listOf(
+        StrokeCap.Butt to R.drawable.line,
+        StrokeCap.Round to R.drawable.circle,
+        StrokeCap.Square to R.drawable.square,
+    )
+
+    LazyRow(
+        modifier = Modifier.padding(5.dp)
+    )
+    {
+        items(patterns) { pattern ->
+            Box(
+                modifier = Modifier
+                    .padding(end = 10.dp)
+                    .clickable {
+                        onClick(pattern.first)
+                    }
+                    .size(30.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = pattern.second),
+                    contentDescription = null
+                )
+            }
+        }
     }
 }
